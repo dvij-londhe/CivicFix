@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Reports | CivicFix</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{background:#0f172a;color:white;display:flex;}
+
+/* SIDEBAR */
+.sidebar{
+width:240px;
+height:100vh;
+background:#020617;
+padding:30px 20px;
+position:fixed;
+display:flex;
+flex-direction:column;
+}
+
+
+.sidebar h2{
+color:#38bdf8;
+margin-bottom:40px;
+}
+
+.sidebar a{
+text-decoration:none;
+color:#cbd5f5;
+padding:10px 0;
+margin-bottom:10px;
+transition:0.2s;
+}
+
+.highlight{
+color: #38bdf8;
+font-size: 1.3rem;
+font-weight: 900;
+}
+
+.sidebar a:hover{
+color:#38bdf8;
+}
+
+.flash{
+position: fixed;
+top: 80px;
+right: 450px;
+width: 30vw;
+padding:10px;
+border-radius:6px;
+font-size:13px;
+margin-bottom:15px;
+text-align:center;
+}
+
+.error{
+background:#ef4444;
+}
+
+.success{
+background:#22c55e;
+}
+
+/* MAIN */
+.main{
+margin-left:240px;padding:30px;width:100%;
+}
+
+.header{
+display:flex;justify-content:space-between;align-items:center;
+margin-bottom:20px;
+}
+
+.header h1{
+background:linear-gradient(90deg,#38bdf8,#818cf8);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+/* CONTROLS */
+.controls{
+display:flex;gap:10px;margin-bottom:20px;
+}
+
+.controls input,
+.controls select{
+padding:10px;border-radius:8px;border:none;
+background:#1e293b;color:white;
+}
+
+.filter-form select{
+padding:8px;
+border-radius:6px;
+border:none;
+}
+
+
+/* TABLE */
+.table{
+background:#1e293b;border-radius:12px;overflow:hidden;
+}
+
+.row{
+display:grid;
+grid-template-columns:50px 1.8fr 1fr 2fr 2fr 0.8fr 0.9fr 190px;
+padding:12px;border-bottom:1px solid #334155;
+align-items:center;
+margin-bottom: 3px;
+}
+
+.action-form select{
+padding:6px;
+border-radius:6px;
+border:none;
+}
+
+.action-form button{
+background:#38bdf8;
+border:none;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.header-row{background:#020617;font-weight:600;}
+
+.desc{font-size:13px;color:#cbd5f5;}
+
+.image-head{
+margin-right: 5px;
+}
+
+/* STATUS */
+.status{
+padding:4px 10px;border-radius:20px;font-size:12px;
+}
+
+.pending{background:#facc15;color:black;}
+.progress{background:#38bdf8;color:black;}
+.resolved{background:#22c55e;color:black;}
+
+.status-head{
+margin-left: 7px;
+}
+
+/* BUTTONS */
+button{
+padding:6px 10px;border:none;border-radius:6px;cursor:pointer;
+margin-top:5px;
+}
+
+.view-btn{background:#22c55e;color:white;}
+.delete-btn{background:#ef4444;color:white;}
+
+button:hover{opacity:0.85}
+
+/* MODAL */
+.modal{
+position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.7);
+display:none;justify-content:center;align-items:center;
+}
+
+/* FIXED MODAL */
+.modal-content{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+max-width:500px;
+width:90%;
+max-height:80vh;
+overflow-y:auto;
+}
+
+.modal img{
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+/* FIXED TEXT */
+#modalDesc{
+margin-top:10px;
+color:#cbd5f5;
+font-size:14px;
+line-height:1.5;
+white-space:normal;
+word-break:break-word;
+overflow-wrap:break-word;
+}
+
+.empty{
+padding:20px;text-align:center;color:#cbd5f5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>CivicFix Admin</h2>
+
+<a href="{{ url_for('admin.dashboard') }}">Dashboard</a> <a href="{{ url_for('admin.reports') }}" class="highlight" style="color: #38bdf8;">Reports</a> <a href="{{ url_for('admin.admin_analytics') }}">Analytics</a> <a href="{{ url_for('auth.logout') }}">Logout</a>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+<h1>All Reports</h1>
+<h3 id="count">{{ count }}</h3>
+</div>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="flash {{ category }}" id="errorBox">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+<div class="controls">
+
+<!-- SEARCH (BACKEND READY) -->
+
+<form class="search-form" action="{{ url_for('admin.reports') }}" method="GET">
+
+    <input
+    type="text"
+    name="q"
+    placeholder="Search reports"
+    value="{{ request.args.get('q', '') }}"
+    >
+
+    <select name="status" onchange="this.form.submit()">
+
+        <option value="" {{ 'selected' if request.args.get('status') == None else '' }}>All Status</option>
+        <option value="pending" {{ 'selected' if request.args.get('status') == 'pending' else '' }}>Pending</option>
+        <option value="in progress" {{ 'selected' if request.args.get('status') == 'in progress' else '' }}>In Progress</option>
+        <option value="resolved" {{ 'selected' if request.args.get('status') == 'resolved' else '' }}>Resolved</option>
+
+    </select>
+
+</form>
+
+
+</div>
+
+<div class="table">
+
+    <div class="row header-row">
+        <div>ID</div>
+        <div>Issue</div>
+        <div>Category</div>
+        <div>Location</div>
+        <div>Description</div>
+        <div class="image-head">Image</div>
+        <div class="status-head">Status</div>
+        <div>Action</div>
+    </div>
+
+    <div id="reportTable">
+        {% if reports %}
+            {% for report in reports %}
+                <div class="row">
+                    <div>{{ report["id"] }}</div>
+                    <div>{{ report["title"] }}</div>
+                    <div>{{ report["category"] }}</div>
+                    <div>{{ report["location"] }}</div>
+                    <div>{{ report["description"] }}</div>
+                    {% if report['image'] %}
+                        <button
+                            class="image-head view-btn"
+                            onclick="openModal('{{ url_for('static', filename='uploads/' + report['image'] if report['image'] else '') }}')"
+                        >View</button>
+                    {% else %}
+                        <button
+                            class="image-head"
+                        >N/A</button>
+                    {% endif %}
+                    <div>
+                        <span class="status status-head {{ "progress" if "progress" in report["status"] else report["status"] }}">{{ report["status"] }}</span>
+                    </div>
+                    <div>
+
+                        <form class="action-form" action="{{ url_for('admin.update_status', id=report['id']) }}" method="POST">
+                            <select name="status">
+                                <option value="pending">Pending</option>
+                                <option value="in progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                            <button type="submit">Update</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal" onclick="closeModal()">
+<div class="modal-content" onclick="event.stopPropagation()">
+<img id="modalImg">
+<p id="modalDesc"></p>
+</div>
+</div>
+
+<script>
+
+    setTimeout(function() {
+        let flashes = document.querySelectorAll(".flash");
+        flashes.forEach(function(flash) {
+            flash.style.transition = "opacity 0.5s";
+            flash.style.opacity = "0";
+            setTimeout(() => flash.remove(), 500);
+        });
+   }, 5000);
+
+/* MODAL */
+
+function openModal(imagePath){
+    document.getElementById("modalImg").src = imagePath;
+    document.getElementById("modal").style.display = "flex";
+}
+
+
+function closeModal(){
+document.getElementById("modal").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>

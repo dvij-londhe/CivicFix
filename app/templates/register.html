@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sign Up | CivicFix</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+}
+
+/* CARD */
+
+.container{
+width:420px;
+background:rgba(255,255,255,0.05);
+padding:40px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+}
+
+.container h1{
+text-align:center;
+margin-bottom:30px;
+
+background:linear-gradient(90deg,#38bdf8,#818cf8);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* ERROR */
+
+.error{
+background:#ef4444;
+padding:10px;
+border-radius:6px;
+font-size:13px;
+margin-bottom:15px;
+text-align:center;
+display:none;
+}
+
+/* INPUT */
+
+.input-group{
+margin-bottom:18px;
+}
+
+.input-group .form-label{
+display:block;
+margin-bottom:6px;
+font-size:14px;
+}
+
+.input-group .input-field{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+outline:none;
+}
+
+/* BUTTON */
+
+.button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:30px;
+
+background:linear-gradient(90deg,#38bdf8,#818cf8);
+color:white;
+
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+.button:hover{
+box-shadow:0 10px 25px rgba(56,189,248,0.35);
+}
+
+/* FOOTER */
+
+.bottom{
+text-align:center;
+margin-top:20px;
+font-size:14px;
+}
+
+.bottom a{
+color:#38bdf8;
+text-decoration:none;
+}
+
+.bottom a:hover{
+text-decoration:underline;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Create Account</h1>
+
+<div class="error" id="errorBox">
+Registration failed
+</div>
+
+<form action="{{ url_for('auth.register') }}" method="POST">
+{{ form.hidden_tag() }}
+<div class="input-group">
+    {{ form.name.label(class="form-label") }}
+    {{ form.name(class="input-field", placeholder="Enter your name") }}
+    {% if form.name.errors %}
+        {% for error in form.name.errors %}
+            <span style="color: #ef4444;">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="input-group">
+    {{ form.email.label(class="form-label") }}
+    {{ form.email(class="input-field", placeholder="Enter your email") }}
+    {% if form.email.errors %}
+        {% for error in form.email.errors %}
+            <span style="color: #ef4444;">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="input-group">
+    {{ form.password.label(class="form-label") }}
+    {{ form.password(class="input-field", placeholder="Enter your Password") }}
+    {% if form.password.errors %}
+        {% for error in form.password.errors %}
+            <span style="color: #ef4444;">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="input-group">
+    {{ form.password2.label(class="form-label") }}
+    {{ form.password2(class="input-field", placeholder="Confirm Your password") }}
+    {% if form.password2.errors %}
+        {% for error in form.password2.errors %}
+            <span style="color: #ef4444;">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+</div>
+
+{{ form.submit(class="button") }}
+
+</form>
+
+<div class="bottom">
+Already have an account? 
+<a href="{{ url_for('auth.login') }}">Login</a>
+</div>
+
+</div>
+
+</body>
+</html>

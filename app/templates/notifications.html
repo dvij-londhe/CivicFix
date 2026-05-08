@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | CivicFix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* RESET */
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background:linear-gradient(135deg,#0f172a,#1e293b); color:white; padding-top:90px; min-height: 100vh;}
+
+        /* NAVBAR */
+        .navbar{ position:fixed; top:0; width:100%; display:flex; justify-content:space-between; align-items:center; padding:20px 8%; background:rgba(15,23,42,0.9); backdrop-filter:blur(10px); z-index: 1000; }
+        .logo a{ text-decoration:none; color:white; font-size:22px; font-weight:600; }
+        .nav-links{ display:flex; align-items:center; }
+        .nav-links a{ text-decoration:none; color:white; margin-left:25px; transition:0.3s; }
+        .nav-links a:hover{ color:#38bdf8; }
+
+        /* NOTIFICATION ICON & BADGE */
+        .notification{ position:relative; font-size:20px; }
+        .badge{ position:absolute; top:-6px; right:-10px; background:#ef4444; color:white; font-size:11px; padding:2px 6px; border-radius:50%; display:none; font-weight: bold; }
+
+        /* PAGE CONTAINER */
+        .container{ max-width:900px; margin:auto; padding:20px; }
+        h1{ margin-bottom:30px; background:linear-gradient(90deg,#38bdf8,#818cf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size: 2.5rem; }
+
+        /* NOTIFICATIONS LIST */
+        .notifications-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .notif-item {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .notif-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .notif-item.unread {
+            border-left: 4px solid #38bdf8;
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .notif-message {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .notif-time {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .empty-state {
+            padding: 60px;
+            text-align: center;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo"><a href="{{ url_for('user.dashboard') }}">CivicFix</a></div>
+    <div class="nav-links">
+        <a href="{{ url_for('user.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('complaint.report') }}">Report Issue</a>
+        <a href="{{ url_for('complaint.my_reports') }}">My Reports</a>
+        <a href="{{ url_for('notification.notifications') }}" class="notification">
+            🔔 <span class="badge" id="notifCount">0</span>
+        </a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Notifications</h1>
+    <div class="notifications-container" id="notificationList">
+<!-- DEMO: UNREAD NOTIFICATION -->
+        <div class="notif-item unread">
+            <div class="notif-message"><strong>Status Update:</strong> Your report regarding "Broken Streetlight" has been marked as <b>In Progress</b>.</div>
+            <div class="notif-time">2 minutes ago</div>
+        </div>
+
+        <!-- DEMO: UNREAD NOTIFICATION -->
+        <div class="notif-item unread">
+            <div class="notif-message">Welcome to CivicFix! You can now start reporting local issues in your area.</div>
+            <div class="notif-time">1 hour ago</div>
+        </div>
+
+        <!-- DEMO: READ NOTIFICATION -->
+        <div class="notif-item">
+            <div class="notif-message">Your report #CF-1092 has been successfully submitted.</div>
+            <div class="notif-time">Yesterday at 4:30 PM</div>
+        </div>
+    </div>
+</div>
+
+<script>
+<!--    const notifBadge = document.getElementById("notifCount");-->
+
+<!--    function updateNotifications(count){-->
+<!--        if(count > 0){-->
+<!--            notifBadge.style.display = "inline-block";-->
+<!--            notifBadge.innerText = count;-->
+<!--        } else {-->
+<!--            notifBadge.style.display = "none";-->
+<!--        }-->
+<!--    }-->
+
+<!--    /*-->
+<!--       Pass the unread count from Flask context-->
+<!--       Example: updateNotifications({{ unread_count }});-->
+<!--    */-->
+<!--    updateNotifications({{ unread_count or 0 }});-->
+</script>
+
+</body>
+</html>

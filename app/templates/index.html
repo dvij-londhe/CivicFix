@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CivicFix | Smart Civic Reporting</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+padding-top:80px;
+}
+
+/* NAVBAR */
+
+.navbar{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 8%;
+background:rgba(15,23,42,0.9);
+backdrop-filter:blur(10px);
+z-index:1000;
+}
+
+.logo a{
+text-decoration:none;
+color:white;
+font-size:22px;
+font-weight:600;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+margin-left:30px;
+transition:0.3s;
+}
+
+.nav-links a:hover{
+color:#38bdf8;
+}
+
+/* HERO */
+
+.hero{
+min-height:90vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:20px;
+position:relative;
+}
+
+.hero::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+background:radial-gradient(circle,#38bdf8 0%,transparent 70%);
+opacity:0.15;
+filter:blur(120px);
+z-index:-1;
+}
+
+.hero-content{
+max-width:700px;
+}
+
+.hero h1{
+font-size:50px;
+margin-bottom:20px;
+background:linear-gradient(90deg,#38bdf8,#818cf8);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+font-size:18px;
+color:#cbd5e1;
+margin-bottom:40px;
+line-height:1.6;
+}
+
+/* BUTTONS */
+
+.buttons{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:14px 30px;
+border-radius:50px;
+font-weight:600;
+cursor:pointer;
+transition:all 0.25s ease;
+text-decoration:none;
+}
+
+.primary{
+background:linear-gradient(90deg,#38bdf8,#818cf8);
+color:white;
+}
+
+.primary:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(56,189,248,0.35);
+}
+
+.secondary{
+border:1px solid #38bdf8;
+color:#38bdf8;
+}
+
+.secondary:hover{
+background:#38bdf8;
+color:white;
+}
+
+/* SECTION */
+
+.section{
+padding:100px 8%;
+text-align:center;
+}
+
+.section h2{
+font-size:34px;
+margin-bottom:60px;
+}
+
+/* FEATURE CARDS */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:30px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.1);
+transition:all 0.3s ease;
+}
+
+.card:hover{
+transform:translateY(-10px);
+border-color:#38bdf8;
+box-shadow:0 20px 40px rgba(0,0,0,0.35);
+}
+
+.card h3{
+margin-bottom:15px;
+color:#38bdf8;
+}
+
+.card p{
+color:#cbd5e1;
+line-height:1.6;
+}
+
+/* HOW IT WORKS */
+
+.steps{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:35px;
+margin-top:40px;
+}
+
+.step{
+background:rgba(255,255,255,0.04);
+padding:30px;
+border-radius:16px;
+border:1px solid rgba(255,255,255,0.08);
+position:relative;
+transition:all 0.3s ease;
+text-align:left;
+}
+
+.step::before{
+content:"";
+position:absolute;
+left:0;
+top:0;
+height:100%;
+width:4px;
+background:#38bdf8;
+border-radius:4px;
+}
+
+.step:hover{
+transform:translateY(-8px);
+border-color:#38bdf8;
+box-shadow:0 15px 30px rgba(0,0,0,0.35);
+}
+
+.step h3{
+margin-bottom:10px;
+color:#38bdf8;
+}
+
+.step p{
+color:#cbd5e1;
+line-height:1.6;
+}
+
+/* CTA */
+
+.cta{
+text-align:center;
+padding:120px 20px;
+}
+
+.cta h2{
+font-size:36px;
+margin-bottom:20px;
+}
+
+.cta p{
+color:#cbd5e1;
+margin-bottom:30px;
+}
+
+/* FOOTER */
+
+footer{
+background:#0f172a;
+padding:30px;
+text-align:center;
+color:#94a3b8;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">
+<a href="{{ url_for('main.index') }}">CivicFix</a>
+</div>
+
+<div class="nav-links">
+<a href="{{ url_for('main.learn_more') }}">Learn</a>
+<a href="{{ url_for('auth.login') }}">Login</a>
+<a href="{{ url_for('auth.register') }}">Sign Up</a>
+</div>
+
+</div>
+
+<!-- HERO -->
+
+<div class="hero">
+
+<div class="hero-content">
+
+<h1>Smarter Way To Report Local Problems</h1>
+
+<p>
+CivicFix allows citizens to report local infrastructure issues
+like potholes, garbage accumulation, and broken streetlights
+while tracking their resolution transparently.
+</p>
+
+<div class="buttons">
+
+<a href="{{ url_for('auth.login') }}" class="btn primary">Report Issue</a>
+
+<a href="{{ url_for('main.learn_more') }}" class="btn secondary">Learn More</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FEATURES -->
+
+<div class="section">
+
+<h2>Platform Features</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>📍 Location Based Reporting</h3>
+<p>Submit complaints with accurate location details.</p>
+</div>
+
+<div class="card">
+<h3>📸 Image Upload</h3>
+<p>Attach images to clearly show the issue.</p>
+</div>
+
+<div class="card">
+<h3>📊 Transparency</h3>
+<p>Track complaint progress from report to resolution.</p>
+</div>
+
+<div class="card">
+<h3>👥 Community Participation</h3>
+<p>Citizens collaborate to improve their city.</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- HOW IT WORKS -->
+
+<div class="section">
+
+<h2>How CivicFix Works</h2>
+
+<div class="steps">
+
+<div class="step">
+
+<h3>Create an Account</h3>
+
+<p>
+Sign up on CivicFix to access the reporting system and manage complaints easily.
+</p>
+
+</div>
+
+<div class="step">
+
+<h3>Report the Issue</h3>
+
+<p>
+Submit details about the problem including description, location, and optional images.
+</p>
+
+</div>
+
+<div class="step">
+
+<h3>Track Resolution</h3>
+
+<p>
+Monitor the progress of your complaint until it is resolved by authorities.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CTA -->
+
+<div class="cta">
+
+<h2>Help Improve Your City</h2>
+
+<p>
+Join CivicFix and contribute to a cleaner and safer community.
+</p>
+
+<a href="{{ url_for('auth.register') }}" class="btn primary">
+Create Account
+</a>
+
+</div>
+
+<footer>
+
+© 2026 CivicFix | Civic Issue Reporting Platform
+
+</footer>
+
+</body>
+</html>

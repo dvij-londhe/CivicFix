@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Reports | CivicFix</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+padding-top:90px;
+}
+
+/* NAVBAR */
+
+.navbar{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 8%;
+background:rgba(15,23,42,0.9);
+backdrop-filter:blur(10px);
+}
+
+.logo a{
+text-decoration:none;
+color:white;
+font-size:22px;
+font-weight:600;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+margin-left:30px;
+transition:0.3s;
+}
+
+.nav-links a:hover{
+color:#38bdf8;
+}
+
+/* PAGE */
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
+
+h1{
+margin-bottom:30px;
+
+background:linear-gradient(90deg,#38bdf8,#818cf8);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* FILTERS */
+
+.filters{
+margin-bottom:20px;
+}
+
+select{
+padding:10px;
+border-radius:8px;
+border:none;
+background:#1e293b;
+color:white;
+margin-bottom: 20px;
+padding-right: 10px;
+}
+
+/* TABLE */
+
+.table{
+background:rgba(255,255,255,0.05);
+border-radius:18px;
+border:1px solid rgba(255,255,255,0.1);
+overflow:hidden;
+}
+
+.row{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+padding:15px 20px;
+border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.header{
+font-weight:600;
+background:rgba(255,255,255,0.05);
+}
+
+.date-head{
+margin-left: 25px;
+}
+
+/* STATUS */
+
+.status{
+padding:4px 12px;
+border-radius:20px;
+font-size:12px;
+width:fit-content;
+}
+
+.pending{background:#facc15;color:black;}
+.progress{background:#38bdf8;color:black;}
+.resolved{background:#22c55e;color:black;}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">
+<a href="{{ url_for('user.dashboard') }}">CivicFix</a>
+</div>
+
+<div class="nav-links">
+<a href="{{ url_for('user.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('complaint.report') }}">Report Issue</a>
+<a href="{{ url_for('complaint.my_reports') }}">My Reports</a>
+<a href="{{ url_for('auth.logout') }}">Logout</a>
+</div>
+
+</div>
+
+<div class="container">
+
+<h1>My Reports</h1>
+
+<form class="search-form" action="{{ url_for('complaint.my_reports') }}" method="GET">
+    <select name="status" onchange="this.form.submit()">
+        <option value="" {{ 'selected' if request.args.get('status') == None else '' }}>All Status</option>
+        <option value="pending" {{ 'selected' if request.args.get('status') == 'pending' else '' }}>Pending</option>
+        <option value="in progress" {{ 'selected' if request.args.get('status') == 'in progress' else '' }}>In Progress</option>
+        <option value="resolved" {{ 'selected' if request.args.get('status') == 'resolved' else '' }}>Resolved</option>
+    </select>
+
+</form>
+
+<div class="table">
+
+<div class="row header">
+
+<div>Issue</div>
+<div>Category</div>
+<div>Location</div>
+<div class="date-head">Date</div>
+<div>Status</div>
+
+</div>
+
+<div id="reportTable">
+
+<!-- Backend will generate report rows here -->
+
+<!-- Example structure for backend -->
+
+    {% if all_reports %}
+        {% for report in all_reports %}
+            <div class="row">
+            <div>{{ report['title'] }}</div>
+            <div>{{ report['category'] }}</div>
+            <div>{{ report['location'] }}</div>
+            <div class="date-head">{{ report['created_at'].strftime('%d-%b-%y') }}</div>
+            <div><span class="status {{ 'progress' if 'in progress' in report['status'] else report['status'] }}">{{ report['status'] }}</span></div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+<!--<div class="row">-->
+<!--<div>Pothole on FC Road</div>-->
+<!--<div>Pothole</div>-->
+<!--<div>FC Road</div>-->
+<!--<div>12 Mar 2026</div>-->
+<!--<div><span class="status pending">Pending</span></div>-->
+<!--</div>-->
+
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
